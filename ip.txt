@@ -6,3 +6,4 @@
 192.168.43.151  ansible_user=root   ansible_ssh_pass=Vishal@123   ansible_connection=ssh
 192.168.43.161  ansible_user=root   ansible_ssh_pass=Vishal@123   ansible_connection=ssh
 192.168.43.204  ansible_user=root   ansible_ssh_pass=Vishal@123   ansible_connection=ssh
+

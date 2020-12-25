@@ -1,0 +1,67 @@
+- hosts:  myweb
+  vars_files:
+  - var.yml
+          
+  tasks:
+  - name:  "Going to install httpd"
+    package:
+            name:  "httpd"
+            state:  present  
+
+  - name:  "Going to install php"
+    package:
+            name:  "php"
+            state:  present
+
+  - name: "Creating document  root" 
+    file:
+            state:  directory
+            path:  "{{ doc_root }}"
+
+  - name:  "Copying pages in {{ doc_root }}"
+    copy:
+            dest:  "{{ doc_root }}/index.php"
+            src:  "index.php"
+    notify:  restarting webserver service
+             
+  - template:
+          dest:  "/etc/httpd/conf.d/vish.conf"
+          src:  "vish.conf"
+    notify:  restarting webserver service
+
+  - name:  "Installing Python3"
+    package:
+            name:  "python3"
+            state:  present
+
+
+  - name:  "starting service"
+    service:
+            name:  "httpd"
+            state:  started
+  handlers:
+  - name: restarting webserver service
+    service:
+            name:  "httpd"
+            state:  restarted
+
+- hosts:  mylb
+  vars_files:
+  - var.yml
+
+  tasks:
+  - name:  "Installing Haproxy"
+    package:
+            name:  "haproxy"
+            state:  present
+
+  - name:  "Copying  haproxy template"
+    template:
+            dest:  "/etc/haproxy/haproxy.cfg"
+            src:  "haproxy.cfg.j2"
+
+  - name:  "Starting  Haproxy  Service"
+    service:
+            name:  "haproxy"
+            state:  restarted
+                    
